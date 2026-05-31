@@ -1489,7 +1489,7 @@
       const resumoSetores = Object.keys(grupos).sort((a, b) => String(a).localeCompare(String(b), "pt-BR", { numeric: true })).map((setor) => `
         <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:col-span-2">
           <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 mb-3">
-            <p class="text-sm font-extrabold text-slate-900 resumo-setor-titulo">Setor ${setor}</p>
+            <p class="text-sm text-slate-900 resumo-setor-titulo"><span class="font-extrabold">Setor ${setor}</span> <span class="font-normal">- Estufa ${normalizarNumeroLabel(grupos[setor][0]?.estufa)} - Ciclo ${grupos[setor][0]?.ciclo || "-"} - ${normalizarTurno(grupos[setor][0]?.turno)}</span></p>
             <span class="text-xs font-bold text-slate-500">${grupos[setor].length} registro(s)</span>
           </div>
           <div class="space-y-2">
@@ -1501,10 +1501,6 @@
               return Number(a.id || 0) - Number(b.id || 0);
             }).map((registro) => `
               <div class="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-500">
-                  <span>${registro.data ? formatarDataCurta(registro.data) : "-"} · ${normalizarTurno(registro.turno)}</span>
-                  <span class="resumo-estufa-ciclo">Estufa ${normalizarNumeroLabel(registro.estufa)} · Ciclo ${registro.ciclo || "-"}</span>
-                </div>
                 <div class="grid sm:grid-cols-2 gap-2 mt-2 text-sm text-slate-700">
                   <p><span class="font-semibold text-slate-900 bg-sky-100/70 px-2 py-0.5 rounded-md">Vazão:</span> ${numeroBR(registro.vazaoTotal, 0)} Litros</p>
                   <p><span class="font-semibold text-emerald-900 bg-emerald-100/70 px-2 py-0.5 rounded-md">Injetores:</span> ${numeroBR(somaInjetores(registro), 0)} Litros</p>
@@ -1519,10 +1515,11 @@
       `).join("");
       cardsWrap.innerHTML = kpisPreview + (resumoSetores || '<p class="text-sm text-slate-500 sm:col-span-2">Sem registros para exibir.</p>');
 
+      const ultimoRegistro = registrosDoDia.slice().sort((a, b) => Number(b.id || 0) - Number(a.id || 0))[0];
       const pData = document.getElementById("previewData");
       const pOp = document.getElementById("previewOperador");
-      if (pData) pData.textContent = r.data ? formatarDataCurta(r.data) : "-";
-      if (pOp) pOp.textContent = valorOuTraco(r.operador);
+      if (pData) pData.textContent = ultimoRegistro?.data ? formatarDataCurta(ultimoRegistro.data) : (r.data ? formatarDataCurta(r.data) : "-");
+      if (pOp) pOp.textContent = valorOuTraco(ultimoRegistro?.operador || r.operador);
     }
 
     function carregarNoFormulario(r) {
@@ -1928,6 +1925,12 @@
         container.innerHTML = '<p class="text-slate-500 text-sm">Sem dados para análise.</p>';
         return;
       }
+      const corBarra = ({
+        graficoConsumoPeriodo: "bg-sky-600",
+        graficoVazaoSetor: "bg-lime-700",
+        graficoVazaoTurno: "bg-cyan-700",
+        graficoInjetores: "bg-cyan-600"
+      })[containerId] || "bg-sky-600";
       const max = Math.max(...entradas.map(([, v]) => Math.abs(parseNumeroLocal(v))), 1);
       const linhas = entradas.map(([label, valor]) => {
         const largura = Math.max((Math.abs(parseNumeroLocal(valor)) / max) * 100, 4);
@@ -1937,7 +1940,7 @@
             <span class="text-slate-500">${numeroBR(valor, 2)}${unidade}</span>
           </div>
           <div class="h-3 bg-slate-200 rounded overflow-hidden">
-            <div class="h-3 bg-emerald-600 rounded" style="width:${largura}%"></div>
+            <div class="h-3 ${corBarra} rounded" style="width:${largura}%"></div>
           </div>
         </div>`;
       }).join("");
@@ -2056,7 +2059,7 @@
         }).join("");
         return `
           <path d="${areaPath}" fill="url(#${areaId})"></path>
-          <path d="${linhaPath}" fill="none" stroke="${s.cor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="${linhaPath}" fill="none" stroke="${s.cor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
           ${hotspots}
         `;
       }).join("");
@@ -2158,8 +2161,8 @@
           </div>
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="w-20 text-xs font-semibold text-emerald-700">Medido</span>
-              <div class="flex-1 h-2 bg-slate-200 rounded"><div class="h-2 bg-emerald-600 rounded" style="width:${(ecMedio / max) * 100}%"></div></div>
+              <span class="w-20 text-xs font-semibold text-indigo-700">Medido</span>
+              <div class="flex-1 h-2 bg-slate-200 rounded"><div class="h-2 bg-cyan-700 rounded" style="width:${(ecMedio / max) * 100}%"></div></div>
               <span class="w-12 text-right text-xs">${ecMedio.toFixed(2)}</span>
             </div>
             <div class="flex items-center gap-2">
@@ -2183,7 +2186,7 @@
       const max = Math.max(...desvios.map((v) => Math.abs(v)), 0.2);
       container.innerHTML = `<div class="dash-vertical-scroll">${ultimos.map((r) => {
         const desvio = parseNumeroLocal(r.ecMedio) - parseNumeroLocal(r.ecDesejado);
-        const cor = Math.abs(desvio) <= 0.2 ? "bg-emerald-600" : (desvio > 0 ? "bg-red-600" : "bg-amber-500");
+        const cor = Math.abs(desvio) <= 0.2 ? "bg-cyan-600" : (desvio > 0 ? "bg-lime-700" : "bg-sky-500");
         const texto = desvio > 0 ? `+${desvio.toFixed(2)}` : desvio.toFixed(2);
         return `<div class="rounded-lg border border-slate-200 p-3">
           <div class="flex justify-between gap-2 text-sm mb-1">
@@ -2228,10 +2231,10 @@
     function renderLinhaInjetoresDia(registros, injetoresSelecionados = []) {
       const pontos = agruparPorData(registros);
       const todasSeries = [
-        { campo: "cab1", nome: "Injetor 1", cor: "#0f766e" },
-        { campo: "cab2", nome: "Injetor 2", cor: "#2563eb" },
-        { campo: "cab3", nome: "Injetor 3", cor: "#d97706" },
-        { campo: "cab4", nome: "Injetor 4", cor: "#be123c" }
+        { campo: "cab1", nome: "Injetor 1", cor: "#3b82f6" },
+        { campo: "cab2", nome: "Injetor 2", cor: "#0284c7" },
+        { campo: "cab3", nome: "Injetor 3", cor: "#06b6d4" },
+        { campo: "cab4", nome: "Injetor 4", cor: "#4d7c0f" }
       ];
       const selecionados = normalizarListaInjetores(injetoresSelecionados);
       const series = selecionados.length && selecionados.length < todasSeries.length ? todasSeries.filter((s) => selecionados.includes(s.campo)) : todasSeries;
@@ -2240,7 +2243,7 @@
 
     function renderLinhaVazaoDia(registros) {
       renderGraficoLinha("graficoLinhaVazaoDia", agruparPorData(registros), [
-        { campo: "vazaoTotal", nome: "Vazão total", cor: "#16a34a" }
+        { campo: "vazaoTotal", nome: "Vazão total", cor: "#0ea5e9" }
       ], " L");
     }
 
