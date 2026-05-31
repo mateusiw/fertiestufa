@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0b1737" />
   <link rel="icon" type="image/svg+xml" href="./pwa-icon.svg" />
   <link rel="apple-touch-icon" href="./pwa-icon.svg" />
-  <link rel="manifest" href="./manifest.webmanifest" />
+  <link id="appManifestLink" rel="manifest" href="./manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -81,15 +81,73 @@
     .hist-wrap {
       border: 1px solid #dbe5f0;
       border-radius: 14px;
-      background: #ffffff;
-      overflow: auto;
+      background: #f8fafc;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
       max-height: 360px;
+      padding: 10px;
+    }
+    .hist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hist-setor-bloco {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .hist-setor-titulo {
+      padding: 8px 10px;
+      background: #eef2f7;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .hist-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid #eef2f7;
+    }
+    .hist-item-info {
+      min-width: 0;
+    }
+    .hist-item-data {
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+    .hist-item-turno {
+      margin-top: 2px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.1;
+    }
+    .hist-vazao {
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    .hist-acoes {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .hist-table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 760px;
+      min-width: 0;
+      table-layout: fixed;
     }
     .hist-table thead th {
       position: sticky;
@@ -100,16 +158,36 @@
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .02em;
-      padding: 11px 12px;
+      padding: 10px 9px;
       border-bottom: 1px solid #e2e8f0;
       white-space: nowrap;
+      text-align: center;
     }
     .hist-table tbody td {
-      padding: 12px;
+      padding: 10px 9px;
       border-bottom: 1px solid #eef2f7;
       color: #0f172a;
       vertical-align: middle;
+      text-align: center;
     }
+    .hist-table thead th:first-child,
+    .hist-table tbody td:first-child {
+      text-align: center;
+    }
+    .hist-table th:nth-child(1),
+    .hist-table td:nth-child(1) { width: 46%; }
+    .hist-table th:nth-child(2),
+    .hist-table td:nth-child(2) { width: 12%; }
+    .hist-table th:nth-child(3),
+    .hist-table td:nth-child(3) { width: 12%; }
+    .hist-table th:nth-child(4),
+    .hist-table td:nth-child(4) { width: 30%; }
+    .hist-table th:nth-child(2),
+    .hist-table td:nth-child(2),
+    .hist-table th:nth-child(3),
+    .hist-table td:nth-child(3),
+    .hist-table th:nth-child(4),
+    .hist-table td:nth-child(4) { white-space: nowrap; }
     .hist-setor-row td {
       background: #f1f5f9;
       color: #475569;
@@ -117,8 +195,9 @@
       font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
+      text-align: left;
       border-bottom: 1px solid #e2e8f0;
-      padding: 8px 12px;
+      padding: 7px 9px;
     }
     .hist-chip {
       display: inline-block;
@@ -453,21 +532,91 @@
       border-color: #fca5a5;
     }
     @media (max-width: 768px) {
+      main > section {
+        min-width: 0;
+      }
       .hist-wrap {
         max-height: 58vh;
         border-radius: 12px;
         overflow-x: hidden;
+        overflow-y: auto;
+        padding: 8px;
+      }
+      .hist-setor-titulo {
+        padding: 7px 9px;
+        font-size: 11px;
+      }
+      .hist-item {
+        gap: 7px;
+        padding: 8px;
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+      }
+      .hist-item-data {
+        font-size: 14px;
+      }
+      .hist-item-turno {
+        font-size: 11px;
+      }
+      .hist-vazao {
+        font-size: 14px;
       }
       .hist-table {
+        width: 100%;
         min-width: 0;
         table-layout: fixed;
       }
+      .hist-table th:nth-child(1),
+      .hist-table td:nth-child(1) {
+        min-width: 0;
+        width: 48%;
+      }
+      .hist-table th:nth-child(2),
+      .hist-table td:nth-child(2) {
+        min-width: 0;
+        width: 12%;
+      }
+      .hist-table th:nth-child(3),
+      .hist-table td:nth-child(3) {
+        min-width: 0;
+        width: 12%;
+      }
+      .hist-table th:nth-child(4),
+      .hist-table td:nth-child(4) {
+        min-width: 0;
+        width: 28%;
+      }
       .hist-table thead th,
       .hist-table tbody td {
-        padding: 10px 9px;
-        font-size: 12px;
+        padding: 6px 4px;
+        font-size: 10px;
         white-space: normal;
         word-break: break-word;
+      }
+      .hist-table thead th {
+        font-size: 9px;
+        line-height: 1.2;
+      }
+      .hist-setor-row td {
+        font-size: 10px;
+        padding: 5px 6px;
+      }
+      .hist-chip {
+        font-size: 10px;
+        padding: 1px 6px;
+      }
+      .hist-acao {
+        font-size: 10px;
+        padding: 4px 5px;
+      }
+      .hist-acao-del {
+        min-width: 30px;
+        width: 30px;
+        padding: 4px 0;
+        justify-content: center;
+      }
+      .hist-table tbody td:last-child .flex {
+        justify-content: center;
+        gap: 4px;
       }
       .dash-filter-card,
       .dash-kpi,
@@ -548,7 +697,7 @@
   <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div class="flex items-center gap-3">
-        <img src="./assets/logo-fertiestufa.png" alt="Logo FertiEstufa" class="h-16 w-auto object-contain" />
+        <img src="https://i.imgur.com/WSI8DsS.png" alt="Logo FertiEstufa" class="h-16 w-auto object-contain" />
         <h1 class="text-lg sm:text-xl font-extrabold text-slate-900">Painel FertiEstufa</h1>
       </div>
       <div class="w-full sm:w-auto flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3">
@@ -675,12 +824,7 @@
         <button id="btnLimpar" class="input-danger-btn px-4 !min-h-9 text-xs whitespace-nowrap w-full sm:w-auto">Limpar histórico local</button>
       </div>
       <div class="hist-wrap">
-        <table class="hist-table text-sm">
-          <thead>
-            <tr><th class="text-left">Data / Turno</th><th class="text-left">Estufa</th><th class="text-left">Setor</th><th class="text-left">Vazão (L)</th><th class="text-left">EC (Média / Desejada)</th><th class="text-left">Ações</th></tr>
-          </thead>
-          <tbody id="tabelaHistorico"></tbody>
-        </table>
+        <div id="tabelaHistorico" class="hist-list"></div>
       </div>
     </section>
     </section>
@@ -689,10 +833,10 @@
       <div class="card-panel overflow-hidden min-h-[760px]">
         <div class="bg-slate-900 text-white p-5 flex items-start justify-between gap-3">
           <div>
-            <h2 class="text-xl font-extrabold">Resumo Diário da Fertirrigação</h2>
+            <h2 id="tituloResumoPreview" class="text-xl font-extrabold">Resumo Diário da Fertirrigação</h2>
             <p class="text-sm text-slate-300">Consolidado das operações realizadas no dia</p>
           </div>
-          <img src="./assets/logo-fertiestufa.png" alt="Logo FertiEstufa" class="h-20 w-auto object-contain shrink-0" />
+          <img src="https://i.imgur.com/WSI8DsS.png" alt="Logo FertiEstufa" class="h-20 w-auto object-contain shrink-0" />
         </div>
         <div class="p-5 border-b bg-white">
           <div class="space-y-1 text-sm">
@@ -939,13 +1083,35 @@
     let granularidadeDesvioEcDashboard = "dia";
     let periodoDashboard = { inicio: "", fim: "" };
     let periodoCalendarioTemp = { inicio: "", fim: "" };
-    let mesCalendarioDashboard = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const FUSO_BRASILIA = "America/Sao_Paulo";
+    let mesCalendarioDashboard = null;
     let preloadDashboardPromise = null;
     let preloadDashboardConcluido = false;
     let preloadDashboardProgresso = 0;
     let preloadDashboardTimer = null;
 
     function valor(id) { return document.getElementById(id).value; }
+    function obterPartesDataSaoPaulo(base = new Date()) {
+      const partes = new Intl.DateTimeFormat("en-CA", {
+        timeZone: FUSO_BRASILIA,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(base);
+      const ano = Number(partes.find((p) => p.type === "year")?.value || 0);
+      const mes = Number(partes.find((p) => p.type === "month")?.value || 1);
+      const dia = Number(partes.find((p) => p.type === "day")?.value || 1);
+      return { ano, mes, dia };
+    }
+    function dataAtualSaoPaulo() {
+      const { ano, mes, dia } = obterPartesDataSaoPaulo();
+      return new Date(ano, mes - 1, dia);
+    }
+    function hojeISOSaoPaulo() {
+      const { ano, mes, dia } = obterPartesDataSaoPaulo();
+      return `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+    }
+    mesCalendarioDashboard = new Date(dataAtualSaoPaulo().getFullYear(), dataAtualSaoPaulo().getMonth(), 1);
     function numeroBR(n, casas = 3) { return Number(n || 0).toLocaleString("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas }); }
     function normalizarTurno(v) {
       const t = String(v || "").toLowerCase();
@@ -1088,7 +1254,7 @@
     function renderHistorico() {
       const registros = lerRegistros().sort((a, b) => b.id - a.id);
       if (!registros.length) {
-        tabela.innerHTML = '<tr><td colspan="6" class="p-5 text-center text-slate-500">Sem registros salvos.</td></tr>';
+        tabela.innerHTML = '<div class="rounded-xl border border-slate-200 bg-white p-5 text-center text-slate-500">Sem registros salvos.</div>';
         atualizarEstadoEdicaoFormulario();
         atualizarEstadoBotaoEnviar();
         atualizarPreview();
@@ -1096,34 +1262,26 @@
       }
       const grupos = agruparRegistrosPorSetor(registros);
       tabela.innerHTML = Object.keys(grupos).sort((a, b) => String(a).localeCompare(String(b), "pt-BR", { numeric: true })).map((setor) => {
-        const linhas = grupos[setor].map((r) => {
+        const itens = grupos[setor].map((r) => {
           const editando = Number(r.id) === Number(idRegistroEmEdicao);
-          const classeLinha = editando ? "bg-blue-50/70" : "hover:bg-slate-50";
+          const classeItem = editando ? "bg-blue-50/70" : "hover:bg-slate-50";
           const textoEditando = editando ? '<span class="text-[11px] text-blue-600 font-bold ml-1">(Editando)</span>' : "";
-          return `<tr class="${classeLinha} cursor-pointer" data-id="${r.id}">
-            <td>
-              <div class="font-semibold text-slate-800">${r.data || "-"}</div>
-              <div class="text-xs text-slate-500 mt-0.5">${normalizarTurno(r.turno)}${textoEditando}</div>
-            </td>
-            <td><span class="hist-chip">${normalizarNumeroLabel(r.estufa)}</span></td>
-            <td><span class="hist-chip">${normalizarNumeroLabel(r.setor)}</span></td>
-            <td class="font-semibold whitespace-nowrap">${numeroBR(r.vazaoTotal, 0)}</td>
-            <td class="whitespace-nowrap">
-              <span class="font-semibold">${Number(r.ecMedio).toFixed(2)}</span>
-              <span class="text-slate-500"> / ${Number(r.ecDesejado).toFixed(2)}</span>
-            </td>
-            <td>
-              <div class="flex items-center gap-2">
-                <button type="button" data-edit-id="${r.id}" class="hist-acao hist-acao-edit" aria-label="Editar">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                  Editar
-                </button>
-                <button type="button" data-delete-id="${r.id}" class="hist-acao hist-acao-del">Deletar</button>
-              </div>
-            </td>
-          </tr>`;
+          return `<div class="hist-item ${classeItem}" data-id="${r.id}">
+            <div class="hist-item-info">
+              <div class="hist-item-data">${formatarDataCurta(r.data) || "-"} <span class="text-slate-500 font-semibold">· ${normalizarTurno(r.turno)}</span>${textoEditando}</div>
+              <div class="hist-item-turno">Estufa ${normalizarNumeroLabel(r.estufa)} · Vazão ${numeroBR(r.vazaoTotal, 0)} L</div>
+            </div>
+            <div class="hist-acoes">
+              <button type="button" data-edit-id="${r.id}" class="hist-acao hist-acao-edit !p-2 !min-h-0" aria-label="Editar" title="Editar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" data-delete-id="${r.id}" class="hist-acao hist-acao-del !p-2 !min-h-0 !text-red-500 !bg-red-50 !border-red-100" aria-label="Deletar" title="Deletar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              </button>
+            </div>
+          </div>`;
         }).join("");
-        return `<tr class="hist-setor-row"><td colspan="6">Setor ${setor}</td></tr>${linhas}`;
+        return `<div class="hist-setor-bloco"><div class="hist-setor-titulo">Setor ${setor}</div>${itens}</div>`;
       }).join("");
       atualizarEstadoEdicaoFormulario();
       atualizarEstadoBotaoEnviar();
@@ -1155,7 +1313,6 @@
       t.classList.remove("hidden");
       setTimeout(() => t.classList.add("hidden"), 2200);
     }
-
     function showConfirmModal(title, message, danger = false) {
       return new Promise((resolve) => {
         const modal = document.getElementById("actionModal");
@@ -1205,19 +1362,23 @@
         confirmBtn.onclick = close;
       });
     }
-    function showShareChoiceModal() {
+    function showShareChoiceModal(resultado) {
       return new Promise((resolve) => {
         const modal = document.getElementById("actionModal");
         const titleEl = document.getElementById("actionModalTitle");
         const msgEl = document.getElementById("actionModalMessage");
         const cancelBtn = document.getElementById("actionModalCancel");
         const confirmBtn = document.getElementById("actionModalConfirm");
+        const suportaCompartilharArquivo = podeCompartilharArquivoResultado(resultado);
         titleEl.textContent = "Envio concluído";
-        msgEl.textContent = "Escolha como deseja enviar a imagem gerada.";
+        msgEl.textContent = suportaCompartilharArquivo
+          ? "Toque em enviar para abrir o compartilhamento do sistema e selecionar o WhatsApp."
+          : "Seu navegador não suporta compartilhamento direto de imagem. Faça o download da foto.";
         cancelBtn.classList.remove("hidden");
         cancelBtn.textContent = "Baixar foto";
-        confirmBtn.textContent = "Compartilhar imagem";
+        confirmBtn.textContent = "Enviar para WhatsApp";
         confirmBtn.className = "dash-primary-btn px-5";
+        confirmBtn.classList.toggle("hidden", !suportaCompartilharArquivo);
         modal.classList.remove("hidden");
         modal.classList.add("flex");
         const close = (acao) => {
@@ -1225,12 +1386,22 @@
           modal.classList.remove("flex");
           cancelBtn.textContent = "Cancelar";
           confirmBtn.textContent = "Confirmar";
+          confirmBtn.disabled = false;
+          confirmBtn.classList.remove("hidden");
           cancelBtn.onclick = null;
           confirmBtn.onclick = null;
           resolve(acao);
         };
         cancelBtn.onclick = () => close("baixar");
-        confirmBtn.onclick = () => close("compartilhar");
+        confirmBtn.onclick = async () => {
+          confirmBtn.disabled = true;
+          const compartilhou = await compartilharImagemResultado(resultado);
+          if (compartilhou) {
+            close("compartilhado");
+            return;
+          }
+          close("falha-compartilhar");
+        };
       });
     }
     function mostrarOverlayEnvio(mostrar) {
@@ -1318,7 +1489,7 @@
       const resumoSetores = Object.keys(grupos).sort((a, b) => String(a).localeCompare(String(b), "pt-BR", { numeric: true })).map((setor) => `
         <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:col-span-2">
           <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 mb-3">
-            <p class="text-sm font-extrabold text-slate-900">Setor ${setor}</p>
+            <p class="text-sm font-extrabold text-slate-900 resumo-setor-titulo">Setor ${setor}</p>
             <span class="text-xs font-bold text-slate-500">${grupos[setor].length} registro(s)</span>
           </div>
           <div class="space-y-2">
@@ -1332,7 +1503,7 @@
               <div class="rounded-xl border border-slate-100 bg-slate-50 p-3">
                 <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-500">
                   <span>${registro.data ? formatarDataCurta(registro.data) : "-"} · ${normalizarTurno(registro.turno)}</span>
-                  <span>Estufa ${normalizarNumeroLabel(registro.estufa)} · Ciclo ${registro.ciclo || "-"}</span>
+                  <span class="resumo-estufa-ciclo">Estufa ${normalizarNumeroLabel(registro.estufa)} · Ciclo ${registro.ciclo || "-"}</span>
                 </div>
                 <div class="grid sm:grid-cols-2 gap-2 mt-2 text-sm text-slate-700">
                   <p><span class="font-semibold text-slate-900 bg-sky-100/70 px-2 py-0.5 rounded-md">Vazão:</span> ${numeroBR(registro.vazaoTotal, 0)} Litros</p>
@@ -1526,7 +1697,7 @@
     }
 
     function aplicarAtalhoPeriodo(tipo) {
-      const hoje = new Date();
+      const hoje = dataAtualSaoPaulo();
       const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
       const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
       const inicioMesPassado = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
@@ -2289,7 +2460,7 @@
     function limparFormulario() {
       idRegistroEmEdicao = null;
       form.reset();
-      document.getElementById("data").value = new Date().toISOString().slice(0, 10);
+      document.getElementById("data").value = hojeISOSaoPaulo();
       document.getElementById("turno").value = "";
       document.getElementById("estufa").value = "";
       document.getElementById("ciclo").value = "";
@@ -2301,7 +2472,7 @@
     }
 
     function formularioTemDadosParaLimpar() {
-      const dataPadrao = new Date().toISOString().slice(0, 10);
+      const dataPadrao = hojeISOSaoPaulo();
       const dataAtual = document.getElementById("data")?.value || "";
       if (dataAtual && dataAtual !== dataPadrao) return true;
       return campos
@@ -2465,48 +2636,126 @@
       for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
       return new File([bytes], nome, { type: mime });
     }
-    async function gerarImagemPreviewComHtmlToImage() {
+    const LARGURA_EXPORTACAO_PREVIEW = 900;
+
+    async function gerarImagemPreviewComHtmlToImage(pixelRatio = 3) {
       const painelResumo = document.querySelector(".right-shell .card-panel");
       if (!painelResumo) throw new Error("Painel de preview não encontrado.");
       if (!window.htmlToImage?.toPng) throw new Error("html-to-image indisponível.");
-      if (document.fonts?.ready) {
-        await document.fonts.ready;
+      const body = document.body;
+      const screenOriginal = body?.dataset?.screen || "";
+      if (body) body.dataset.screen = "desktop";
+      const cloneHost = document.createElement("div");
+      cloneHost.style.position = "fixed";
+      cloneHost.style.left = "-100000px";
+      cloneHost.style.top = "0";
+      cloneHost.style.zIndex = "-1";
+      cloneHost.style.background = "#eef2f7";
+      cloneHost.style.width = `${LARGURA_EXPORTACAO_PREVIEW}px`;
+      document.body.appendChild(cloneHost);
+      try {
+        const clone = painelResumo.cloneNode(true);
+        cloneHost.appendChild(clone);
+        const largura = LARGURA_EXPORTACAO_PREVIEW;
+        clone.style.width = `${largura}px`;
+        clone.style.maxWidth = `${largura}px`;
+        clone.style.minWidth = `${largura}px`;
+        clone.style.margin = "0";
+        clone.style.boxShadow = "none";
+        clone.style.borderRadius = "0";
+        clone.style.border = "none";
+        clone.style.fontFamily = '"Manrope", sans-serif';
+        clone.style.webkitTextSizeAdjust = "100%";
+        clone.style.textSizeAdjust = "100%";
+
+        // Força layout de exportação em padrão desktop, independente da viewport ativa.
+        const gridsDesktop = clone.querySelectorAll('[class*="sm:grid-cols-2"]');
+        gridsDesktop.forEach((el) => {
+          el.style.display = "grid";
+          el.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+        });
+        const spansDesktop = clone.querySelectorAll('[class*="sm:col-span-2"]');
+        spansDesktop.forEach((el) => {
+          el.style.gridColumn = "span 2 / span 2";
+        });
+
+        const previewClone = clone.querySelector("#preview");
+        if (previewClone) {
+          previewClone.style.maxHeight = "none";
+          previewClone.style.overflow = "visible";
+        }
+
+        // Preserva tipografia principal do header exatamente como aparece no preview atual.
+        const tituloOrig = painelResumo.querySelector("#tituloResumoPreview");
+        const subtituloOrig = painelResumo.querySelector(".bg-slate-900 p");
+        const tituloClone = clone.querySelector("#tituloResumoPreview");
+        const subtituloClone = clone.querySelector(".bg-slate-900 p");
+        if (tituloOrig && tituloClone) {
+          const cs = getComputedStyle(tituloOrig);
+          tituloClone.style.fontSize = cs.fontSize;
+          tituloClone.style.fontWeight = cs.fontWeight;
+          tituloClone.style.lineHeight = cs.lineHeight;
+          tituloClone.style.letterSpacing = cs.letterSpacing;
+          tituloClone.style.whiteSpace = "nowrap";
+          tituloClone.style.overflow = "visible";
+          tituloClone.style.textOverflow = "clip";
+          tituloClone.style.margin = cs.margin;
+        }
+        if (subtituloOrig && subtituloClone) {
+          const cs = getComputedStyle(subtituloOrig);
+          subtituloClone.style.fontSize = cs.fontSize;
+          subtituloClone.style.fontWeight = cs.fontWeight;
+          subtituloClone.style.lineHeight = cs.lineHeight;
+          subtituloClone.style.letterSpacing = cs.letterSpacing;
+          subtituloClone.style.margin = cs.margin;
+        }
+        clone.querySelectorAll(".resumo-setor-titulo, .resumo-estufa-ciclo").forEach((el) => {
+          el.style.whiteSpace = "nowrap";
+        });
+        // Em ambiente file:// no Chrome, imagens locais podem falhar em fetch por CORS.
+        // Para não quebrar a exportação inteira, removemos apenas essas imagens do clone.
+        const imagensLocais = Array.from(clone.querySelectorAll('img[src^="./"], img[src^="file://"], img[src^="/"]'));
+        imagensLocais.forEach((img) => {
+          const placeholder = document.createElement("div");
+          const largura = img.clientWidth || img.naturalWidth || 64;
+          const altura = img.clientHeight || img.naturalHeight || 64;
+          placeholder.style.width = `${largura}px`;
+          placeholder.style.height = `${altura}px`;
+          placeholder.style.borderRadius = "12px";
+          placeholder.style.background = "transparent";
+          placeholder.style.display = "inline-block";
+          if (img.parentNode) img.parentNode.replaceChild(placeholder, img);
+        });
+        if (document.fonts?.ready) {
+          await document.fonts.ready;
+        }
+        return await window.htmlToImage.toPng(clone, {
+          pixelRatio,
+          cacheBust: true,
+          fontEmbedCSS: "",
+          backgroundColor: "#eef2f7",
+          width: largura,
+          height: Math.max(clone.scrollHeight, 1)
+        });
+      } finally {
+        document.body.removeChild(cloneHost);
+        if (body) body.dataset.screen = screenOriginal;
       }
-      return window.htmlToImage.toPng(painelResumo, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: "#eef2f7",
-        width: painelResumo.scrollWidth,
-        height: painelResumo.scrollHeight
-      });
     }
 
     async function gerarImagemPreviewComRetry() {
       const tentativas = [
-        () => gerarImagemPreviewComHtmlToImage(),
+        () => gerarImagemPreviewComHtmlToImage(3),
         async () => {
-          const painelResumo = document.querySelector(".right-shell .card-panel");
-          return window.htmlToImage.toPng(painelResumo, {
-            cacheBust: false,
-            pixelRatio: 2,
-            backgroundColor: "#eef2f7",
-            width: painelResumo.scrollWidth,
-            height: painelResumo.scrollHeight
-          });
+          return gerarImagemPreviewComHtmlToImage(2.5);
         },
         async () => {
-          const painelResumo = document.querySelector(".right-shell .card-panel");
-          return window.htmlToImage.toPng(painelResumo, {
-            cacheBust: false,
-            pixelRatio: 1.5,
-            backgroundColor: "#eef2f7",
-            width: painelResumo.scrollWidth,
-            height: painelResumo.scrollHeight
-          });
+          return gerarImagemPreviewComHtmlToImage(2);
         }
       ];
       let ultimoErro = null;
-      for (const tentativa of tentativas) {
+      for (let i = 0; i < tentativas.length; i++) {
+        const tentativa = tentativas[i];
         try {
           return await tentativa();
         } catch (erro) {
@@ -2517,34 +2766,60 @@
       throw ultimoErro || new Error("Falha ao gerar imagem do preview.");
     }
     async function baixarImagem(dataUrl, nomeArquivo) {
-      const resposta = await fetch(dataUrl);
-      const blob = await resposta.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = nomeArquivo;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      try {
+        const arquivo = dataUrlParaArquivo(dataUrl, nomeArquivo || "imagem.png");
+        const url = URL.createObjectURL(arquivo);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = nomeArquivo || "imagem.png";
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        return true;
+      } catch (erro) {
+        console.warn("Falha no download por Blob/ObjectURL:", erro);
+        try {
+          const aba = window.open(dataUrl, "_blank", "noopener,noreferrer");
+          if (!aba) throw new Error("Popup bloqueado");
+          return true;
+        } catch (fallbackErro) {
+          console.warn("Falha no fallback por nova aba:", fallbackErro);
+          return false;
+        }
+      }
     }
 
     async function enviarDadosComoImagem() {
       const registros = lerRegistros().sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
       if (!registros.length) throw new Error("Sem registros para envio.");
       const r = registros[0];
-      await enviarParaPlanilha(r);
       const dataUrl = await gerarImagemPreviewComRetry();
       const nomeArquivo = `fertirrigacao-${r.data}-${r.setor}.png`;
       return { dataUrl, nomeArquivo };
     }
-    async function compartilharImagemResultado(resultado) {
+    function podeCompartilharArquivoResultado(resultado) {
       if (!resultado?.dataUrl || !resultado?.nomeArquivo) return false;
       if (!navigator.share) return false;
       try {
         const arquivo = dataUrlParaArquivo(resultado.dataUrl, resultado.nomeArquivo);
+        if (!arquivo) return false;
+        if (navigator.canShare) {
+          return navigator.canShare({ files: [arquivo] });
+        }
+        return true;
+      } catch (e) {
+        console.warn("Falha ao validar compartilhamento de arquivo:", e);
+        return false;
+      }
+    }
+    async function compartilharImagemResultado(resultado) {
+      if (!resultado?.dataUrl || !resultado?.nomeArquivo) return false;
+      if (!podeCompartilharArquivoResultado(resultado)) return false;
+      try {
+        const arquivo = dataUrlParaArquivo(resultado.dataUrl, resultado.nomeArquivo);
         const payload = { title: "Resumo da fertirrigação", files: [arquivo] };
-        if (navigator.canShare && !navigator.canShare({ files: [arquivo] })) return false;
         await navigator.share(payload);
         return true;
       } catch (e) {
@@ -2605,6 +2880,7 @@
 
     document.getElementById("btnExportar")?.addEventListener("click", exportarCSV);
     document.getElementById("btnEnviarDados")?.addEventListener("click", async () => {
+      let planilhaEnviada = false;
       try {
         if (lerRegistros().length === 0) {
           showToast("Adicione dados ao relatório para liberar o envio.");
@@ -2616,24 +2892,35 @@
         );
         if (!confirmou) return;
         mostrarOverlayEnvio(true);
+        const registros = lerRegistros().sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+        const registroMaisRecente = registros[0];
+        await enviarParaPlanilha(registroMaisRecente);
+        planilhaEnviada = true;
         const resultado = await enviarDadosComoImagem();
         mostrarOverlayEnvio(false);
         if (!resultado) return;
-        const acaoUsuario = await showShareChoiceModal();
-        if (acaoUsuario === "compartilhar") {
-          const compartilhou = await compartilharImagemResultado(resultado);
-          if (compartilhou) {
-            showToast("Imagem compartilhada.");
-            return;
-          }
+        const acaoUsuario = await showShareChoiceModal(resultado);
+        if (acaoUsuario === "compartilhado") {
+          showToast("Compartilhamento aberto.");
+          return;
+        }
+        if (acaoUsuario === "falha-compartilhar") {
           await showInfoModal("Compartilhamento indisponível", "Seu dispositivo/navegador não permitiu abrir o compartilhamento agora. Vamos baixar a foto.", "Baixar foto");
         }
-        await baixarImagem(resultado.dataUrl, resultado.nomeArquivo);
-        showToast("Download da foto iniciado.");
+        const baixou = await baixarImagem(resultado.dataUrl, resultado.nomeArquivo);
+        if (baixou) {
+          showToast("Dados enviados e download da foto iniciado.");
+        } else {
+          showToast("Dados enviados, mas não foi possível baixar/abrir a foto.");
+        }
       } catch (err) {
         console.warn(err);
         mostrarOverlayEnvio(false);
-        showToast("Falha ao enviar para planilha ou gerar imagem.");
+        if (planilhaEnviada) {
+          await showInfoModal("Planilha atualizada", "Os dados foram enviados para a planilha, mas houve falha na geração da imagem.", "OK");
+          return;
+        }
+        showToast("Falha ao enviar dados para a planilha.");
       }
     });
     document.getElementById("btnDashboard")?.addEventListener("click", abrirDashboardComPlanilha);
@@ -2801,6 +3088,9 @@
       if (registro) carregarNoFormulario(registro);
     });
 
+    if (location.protocol === "file:") {
+      document.getElementById("appManifestLink")?.remove();
+    }
     limparFormulario();
     atualizarEstadoOperadorOutro();
     renderHistorico();
